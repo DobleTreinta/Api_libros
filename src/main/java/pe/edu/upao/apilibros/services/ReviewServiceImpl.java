@@ -46,7 +46,7 @@ public class ReviewServiceImpl implements  ReviewService{
     public Review updateReview(Long id, Review reviewDetails) {
         Review review = getReviewById(id);
         review.setTitle(reviewDetails.getTitle());
-        review.setComment(reviewDetails.getComment());
+        review.getClass(reviewDetails.getComment());
         review.setRating(reviewDetails.getRating());
         review.setUpadateAt(LocalDateTime.now());
         return review;

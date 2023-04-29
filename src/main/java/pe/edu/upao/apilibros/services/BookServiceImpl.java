@@ -2,25 +2,70 @@ package pe.edu.upao.apilibros.services;
 
 import pe.edu.upao.apilibros.models.Book;
 import pe.edu.upao.apilibros.repositories.BookRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
-    //Inyeccion de dependencias
     private final BookRepository bookRepository;
-    public BookServiceImpl(BookRepository bookRepository){
+
+    @Autowired
+    public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
+
+
     @Override
     public Book createBook(Book book) {
         return bookRepository.save(book);
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElseThrow( ()->new EntityNotFoundException("Book not found with " + id));
     }
+
+    @Override
+    public List<Book> getAllBooks() {
+        return null;
+    }
+
+
+    @Override
+    public Book updateBook(Long id, Book bookDetails) {
+        Book book = getBookById(id);
+        book.setTitle(bookDetails.getTitle());
+        book.setAuthor(bookDetails.getAuthor());
+        book.setDescription(bookDetails.getDescription());
+        book.setImageUrl(bookDetails.getImageUrl());
+        book.setUpadateAt(LocalDateTime.now());
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        bookRepository.delete(getBookById(id));
+    }
+
+    @Override
+    public List<Book> searchBook(String keyword) {
+        return null;
+    }
+
+    @Override
+    public Book addBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public Book addBook(String title, String author, String description, MultipartFile image) {
+        return null;
+    }
+
 }
